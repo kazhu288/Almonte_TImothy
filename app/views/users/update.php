@@ -185,7 +185,7 @@
     <div class="container">
     <div class="card">
         <div class="card-header">
-            <h1 class="title">🎸 Update Band Info</h1>
+            <h1 class="title">🎸 Update Banda Info</h1>
             <p class="subtitle">Keep your band details fresh</p>
         </div>
         <div class="card-body">
