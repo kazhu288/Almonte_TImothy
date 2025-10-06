@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Band Roster</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Band Roster</title>
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            margin: 0; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             color: #e0e0e0; 
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
+            padding-top: 80px;
         }
         .bg-decor { 
             position: fixed; 
@@ -23,7 +25,117 @@
                 radial-gradient(500px 500px at 90% 80%, rgba(255,105,180,.06), transparent 60%);
             animation: rockBg 20s ease-in-out infinite alternate; 
         }
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 16px; }
+        
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2c2c54 0%, #1a1a2e 100%);
+            border-bottom: 2px solid #40407a;
+            box-shadow: 0 4px 20px rgba(0,0,0,.4);
+            z-index: 1000;
+            animation: slideDown .5s ease;
+        }
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,.5);
+        }
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,215,0,.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,215,0,.3);
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4757, #ffa502);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,.3);
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .user-name {
+            font-weight: 600;
+            color: #ffd700;
+            font-size: 14px;
+        }
+        .user-role {
+            font-size: 11px;
+            color: #b19cd9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-admin {
+            background: linear-gradient(135deg, #ff4757, #ff3742);
+            color: white;
+        }
+        .badge-user {
+            background: linear-gradient(135deg, #706fd3, #5f5fc4);
+            color: white;
+        }
+        .btn-logout {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all .2s ease;
+            border: 2px solid transparent;
+        }
+        .btn-logout:hover {
+            border-color: #ff6b6b;
+            box-shadow: 0 4px 12px rgba(231,76,60,.4);
+            transform: translateY(-2px);
+        }
+        
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 24px; }
         .card { 
             background: linear-gradient(145deg, #2c2c54 0%, #232347 100%); 
             border: 2px solid #40407a; 
@@ -182,10 +294,52 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes rockBg { 0% { background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%; } 100% { background-position: 15% 10%, 85% 15%, 10% 85%, 90% 90%; } }
         @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-content { padding: 12px 16px; }
+            .user-info { padding: 6px 12px; }
+            .user-avatar { width: 32px; height: 32px; font-size: 12px; }
+            .container { padding: 0 16px; }
+            .card-header { flex-direction: column; align-items: flex-start; }
+            .actions { width: 100%; }
+            table { font-size: 13px; }
+            th, td { padding: 12px 14px; }
+        }
     </style>
 </head>
 <body>
     <div class="bg-decor"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">🎸 Band Manager</div>
+            <div class="navbar-user">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <?php 
+                        $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+                        echo strtoupper(substr($username, 0, 1)); 
+                        ?>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name"><?= htmlspecialchars($username) ?></div>
+                        <div class="user-role">
+                            <?php 
+                            $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'user';
+                            $badgeClass = $role === 'admin' ? 'badge-admin' : 'badge-user';
+                            ?>
+                            <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($role) ?></span>
+                        </div>
+                    </div>
+                </div>
+                <a href="<?= site_url('logout') ?>" class="btn-logout">🚪 Logout</a>
+            </div>
+        </div>
+    </nav>
+    
     <div class="container">
         <div class="card">
             <div class="card-header">

@@ -4,7 +4,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 class UserModel extends Model {
     protected $table = 'users';
     protected $primary_key = 'id';
-    protected $allowed_fields = ['username', 'email'];
+    protected $allowed_fields = ['username', 'email', 'password_hash', 'role', 'created_at', 'updated_at'];
     protected $validation_rules = [
         'username' => 'required|min_length[3]|max_length[100]',
         'email'    => 'required|valid_email|max_length[150]'
@@ -13,6 +13,24 @@ class UserModel extends Model {
     public function __construct()
     {
         parent::__construct();
+    }
+    public function findByEmail($email)
+    {
+        return $this->db->table($this->table)
+            ->where('email', $email)
+            ->get();
+    }
+
+    public function verifyCredentials($email, $password)
+    {
+        $user = $this->findByEmail($email);
+        if (!$user) {
+            return false;
+        }
+        if (!isset($user['password_hash'])) {
+            return false;
+        }
+        return password_verify($password, $user['password_hash']) ? $user : false;
     }
 
     public function page($q = '', $records_per_page = null, $page = null)
